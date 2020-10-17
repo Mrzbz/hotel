@@ -1,7 +1,8 @@
 const express = require("express");
 const app = express.Router();
 // 导入MySQL文件
-const mysql = require("../mysql"); 
+const mysql = require("../mysql");
+const md5 = require("md5");
 
 
 
@@ -12,7 +13,6 @@ app.get("/login", (req, res) => {
     res.send({ message: "success", code: 1, result: results });
   })
 })
-
 
 
 

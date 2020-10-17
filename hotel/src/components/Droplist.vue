@@ -90,7 +90,7 @@ export default {
       slotsPri:[
         {
           flex:1,
-          values:['1-255','255-500','500以上'],
+          values:['1000以下','1000-2000','2000以上'],
           className:'slot1',
           textAlign:"center"
         }
