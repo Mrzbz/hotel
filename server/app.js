@@ -27,5 +27,7 @@ server.get("/", (req, res) => {
 // 导入路由
 const UserRouter = require("./router/userRouter.js");
 const resultRouter = require("./router/resultRouter");
+const Detail = require("./router/detail.js");
 server.use("/result", resultRouter);
+server.use("/details", Detail);
 server.use("/user",UserRouter);//挂载路由

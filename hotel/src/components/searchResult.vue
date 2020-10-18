@@ -9,7 +9,7 @@
 
     <!-- 内容开始 -->
     <div v-for="(val,key) of searRes" :key=key>
-      <router-link :to="`/details/${val.lid}`">
+      <router-link :to="`/detail?lid=${val.lid}`">
         <div class="context">
           <!-- 左侧图片 -->
           <img src="../assets/logo.png" alt="" class="imgSize">
