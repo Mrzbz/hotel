@@ -19,10 +19,10 @@
         <p class="title">title</p>
         <p class="subtitle">subtitle</p>  
         <div class="furniture">
-          床<img src="../assets/icon/chuang.png" alt="">
-          WiFi<img src="../assets/icon/wifi.png" alt="">
-          洗衣机<img src="../assets/icon/xiyiji.png" alt="">
-          空调<img src="../assets/icon/kongtiao.png" alt="">
+          床<img src="../assets/icon/chuang.png">
+          WiFi<img src="../assets/icon/wifi.png">
+          洗衣机<img src="../assets/icon/xiyiji.png">
+          空调<img src="../assets/icon/kongtiao.png">
         </div>
         
       </div>
@@ -68,6 +68,8 @@ export default {
 
   },
   methods:{
+  
+    // 加载详情页
     loadPage(lid){
       this.axios.get("/detail?lid="+lid).then(res=>{
         console.log(res.data);

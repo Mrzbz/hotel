@@ -1,29 +1,36 @@
 <template>
   <div class="searchResult">
     <Header/>
-    <!-- 顶部导航栏开始 -->
-    <div class="nav">
-      <Droplist></Droplist>
-    </div>
-    <!-- 顶部导航栏结束 -->
+
 
     <!-- 内容开始 -->
-    <div v-for="(val,key) of searRes" :key=key>
-      <router-link :to="`/detail?lid=${val.lid}`">
-        <div class="context">
-          <!-- 左侧图片 -->
-          <img src="../assets/logo.png" alt="" class="imgSize">
-          <!-- 右侧内容 -->
-          <div class="right_context">
-            <h5 class="title" v-text="val.title">标题</h5>
-            <p  v-text="`${val.subtitle}`">副标题</p>
-            <p class="position"><span v-text="`区域:${val.position}`">位置</span><span v-text="`面积:${val.area}`">面积</span></p>
-            <p class="p_btn"><span v-text="`价格:￥${val.price}`">￥126起</span> 
-              <mt-button type="primary" size=small @click="pay" class="mybutton">下订单</mt-button>
-            </p>
+    <div
+      v-infinite-scroll="loadMore"
+      infinite-scroll-disable="loading"
+      infinite-scroll-distance="10"
+      infinite-scroll-immediate-check="true"
+    >
+      <mt-tab-container v-model="active">
+        <mt-tab-container-item :id="`${active}`">
+          <div v-for="(val,key) of searRes" :key=key>
+            <router-link :to="`/detail/${val.lid}`">
+              <div class="context">
+                <!-- 左侧图片 -->
+                <img v-lazy="`${img1[key]}`" class="imgSize">
+                <!-- 右侧内容 -->
+                <div class="right_context">
+                  <h5 class="title" v-text="val.title">标题</h5>
+                  <p  v-text="`${val.subtitle}`">副标题</p>
+                  <p class="position"><span v-text="`区域:${val.position}`">位置</span><span v-text="`面积:${val.area}`">面积</span></p>
+                  <p class="p_btn"><span v-text="`价格:￥${val.price}`">￥126起</span> 
+                    <mt-button type="primary" size=small @click="pay" class="mybutton">下订单</mt-button>
+                  </p>
+                </div>
+              </div>
+            </router-link>
           </div>
-        </div>
-      </router-link>
+        </mt-tab-container-item>
+      </mt-tab-container>
     </div>
     <!-- 内容结束 -->
   </div>
@@ -39,6 +46,10 @@ export default {
   } ,
   data(){
     return {
+      active:'1',
+      loading:false,
+      pageCount:0,    //总页数
+      page:1,         //页码
       price:"",
       addr:"",
       title:"",
@@ -49,21 +60,67 @@ export default {
       searRes:[]
     }
   },
+  watch:{
+    active(){
+      // this.searRes=[];
+      this.page=1;
+      this.loadPage(this.addr,this.price,this.page);
+    }
+  },
   methods:{
     pay(){
       // 参数：用户id，当前选项结果id
       
     },
-    loadPage(addr,price){
-      this.axios.get("/result/result?addr="+addr+"&price="+price).then(res=>{
-        // console.log(res.data);
-        let data=res.data;
-        this.searRes=data;
+      // 无限滚动
+    loadMore(){
+      this.page++;
+      this.loading=true;
+      if(this.page<=this.pageCount){
+        // 加载数据
+        
+        this.loadPage(this.addr,this.price,this.page);
+       
+      }
+
+    },
+    /**
+     * 加载搜索结果
+     * @param addr  char ,表示地区,例如"龙华"
+     * @param price number ,表示价格,例如"980"
+     * @param page  number ,表示页码,例如"1"
+     */
+    loadPage(addr,price,page){
+      // 加载提示框
+      this.$indicator.open({
+        text:"加载中...",
+        spinnerType:"snake"
+      })
+      // 请求数据 
+      this.axios.get("/result/result?addr="+addr+"&price="+price+"&page="+page).then(res=>{
+        let data=res.data.results;
+        
+        this.pageCount=res.data.pageCount;
+        
+       
+        data.forEach(element => {
+          // console.log(element.img1);//图片文件名
+          // 动态拼接图片路径
+          element.img1=require("../assets/image/img1/"+element.img1);
+          // data.push(img)
+          // console.log(element.img1)
+          this.img1.push(element.img1); //处理图片路径
+          this.searRes.push(element);   //将处理好的数据添加到数组中
+        });
+        // 加载数据期间不允许滚动
+        this.loading=false;
+        // 关闭加载提示框
+        this.$indicator.close();
       })
     }
   },
   mounted(){
-    this.loadPage(this.price,this.addr)
+    this.loadPage(this.price,this.addr,this.page);
   }
 }
 </script>
