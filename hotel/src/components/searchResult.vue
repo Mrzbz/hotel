@@ -1,6 +1,7 @@
 <template>
   <div class="searchResult">
     <Header/>
+    <Droplist :result="searRes" /><!--  父组件给子组件传值  -->
 
 
     <!-- 内容开始 -->
@@ -13,7 +14,7 @@
       <mt-tab-container v-model="active">
         <mt-tab-container-item :id="`${active}`">
           <div v-for="(val,key) of searRes" :key=key>
-            <router-link :to="`/detail/${val.lid}`">
+            <router-link :to="`/detail/${val.lid}`"  >
               <div class="context">
                 <!-- 左侧图片 -->
                 <img v-lazy="`${img1[key]}`" class="imgSize">
@@ -23,7 +24,7 @@
                   <p  v-text="`${val.subtitle}`">副标题</p>
                   <p class="position"><span v-text="`区域:${val.position}`">位置</span><span v-text="`面积:${val.area}`">面积</span></p>
                   <p class="p_btn"><span v-text="`价格:￥${val.price}`">￥126起</span> 
-                    <mt-button type="primary" size=small @click="pay" class="mybutton">下订单</mt-button>
+                    <mt-button type="primary" size=small @click="pay(val.lid)" class="mybutton">详情</mt-button>
                   </p>
                 </div>
               </div>
@@ -46,6 +47,7 @@ export default {
   } ,
   data(){
     return {
+      lid:0,
       active:'1',
       loading:false,
       pageCount:0,    //总页数
@@ -57,7 +59,8 @@ export default {
       img1:[],
       area:"",
       position:"",
-      searRes:[]
+      searRes:[],
+      arr:[]
     }
   },
   watch:{
@@ -65,12 +68,19 @@ export default {
       // this.searRes=[];
       this.page=1;
       this.loadPage(this.addr,this.price,this.page);
+    },
+    arr(){
+      console.log(this.arr);
     }
   },
   methods:{
-    pay(){
+    // 获取子组件传过来的值
+    getUser(msg){
+      this.arr=msg
+    },
+    pay(lid){
       // 参数：用户id，当前选项结果id
-      
+      console.log(lid)
     },
       // 无限滚动
     loadMore(){
@@ -108,7 +118,7 @@ export default {
           // 动态拼接图片路径
           element.img1=require("../assets/image/img1/"+element.img1);
           // data.push(img)
-          // console.log(element.img1)
+          console.log(element.img1)
           this.img1.push(element.img1); //处理图片路径
           this.searRes.push(element);   //将处理好的数据添加到数组中
         });

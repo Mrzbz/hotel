@@ -25,9 +25,11 @@ server.get("/", (req, res) => {
 })
 
 // 导入路由
-const UserRouter = require("./router/userRouter.js");
+const userRouter = require("./router/userRouter.js");
 const resultRouter = require("./router/resultRouter");
 const Detail = require("./router/detail.js");
+const addOrder = require("./router/order.js");
 server.use("/result", resultRouter);
 server.use("/details", Detail);
-server.use("/user",UserRouter);//挂载路由
+server.use("/user", userRouter);//挂载路由
+server.use("/add", addOrder);

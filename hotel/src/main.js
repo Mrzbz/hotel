@@ -6,7 +6,7 @@ import mintUl from 'mint-ui'
 import 'mint-ui/lib/style.min.css'
 import axios from 'axios'
 import qs from 'qs'
-import cors from 'cors'
+// import cors from 'cors'
 
 
 Vue.prototype.axios = axios;

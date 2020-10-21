@@ -22,6 +22,7 @@ CREATE TABLE hotel_user(
 CREATE TABLE hotel_order(
   aid INT PRIMARY KEY AUTO_INCREMENT, #订单编号
   user_id INT,                        #用户id
+  lid INT,                            #房源id
   Ostatus INT,                        #订单状态：1-完成，2-待支付，3-交易失败
   order_time BIGINT,                  #下单时间
   pay_time BIGINT,                    #付款时间
